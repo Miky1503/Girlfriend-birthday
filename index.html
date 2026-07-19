@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños amor mío!</title>
+    <style>
+        /* === ESTILOS BASE === */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fdf2f8; 
+            color: #333;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            overflow-x: hidden; /* Evita cualquier scroll horizontal accidental */
+        }
+
+        header {
+            background-color: #fbcfe8; 
+            padding: 50px 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-bottom: 3px solid #f9a8d4;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            color: #be185d;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            transition: font-size 0.3s;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #831843;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .cake-container {
+            font-size: 6em;
+            margin: 20px 0;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        h2 {
+            color: #9d174d;
+            margin-bottom: 20px;
+            font-size: 2em;
+            margin-top: 40px;
+        }
+
+        /* --- GALERÍA DE FOTOS --- */
+        .gallery-section {
+            padding: 20px;
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto 40px auto;
+        }
+
+        .gallery img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover; 
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            border: 6px solid white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+        }
+
+        /* --- CAJAS SORPRESA --- */
+        .gifts-section {
+            background-color: #fce7f3;
+            padding: 40px 20px;
+            border-top: 3px dashed #f9a8d4;
+            border-bottom: 3px dashed #f9a8d4;
+        }
+
+        .gifts-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .box-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .box-body {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 80px;
+            background: #ec4899;
+            border-radius: 5px;
+            box-shadow: inset 0 -10px rgba(0,0,0,0.1);
+            z-index: 2;
+        }
+
+        .box-body::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 100%;
+            background: #fdf2f8;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .box-lid {
+            position: absolute;
+            top: 20px;
+            width: 110%;
+            left: -5%;
+            height: 30px;
+            background: #db2777;
+            border-radius: 5px;
+            z-index: 3;
+            transition: transform 0.5s ease;
+        }
+
+        .box-container.open .box-lid {
+            transform: translateY(-60px) rotate(15deg);
+        }
+
+        .letter-icon {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3em;
+            z-index: 1;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .box-container.open .letter-icon {
+            opacity: 1;
+            transform: translate(-50%, -60px);
+        }
+
+        /* --- CARTA EMERGENTE --- */
+        .modal-overlay {
+            display: none; 
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .letter-content {
+            background: #fffdf5; 
+            width: 80%;
+            max-width: 500px;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s;
+            font-family: 'Georgia', serif;
+            color: #4a044e;
+            text-align: left;
+            line-height: 1.8;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.show .letter-content {
+            transform: scale(1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 2em;
+            color: #be185d;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .signature {
+            text-align: right;
+            font-weight: bold;
+            font-style: italic;
+            margin-top: 20px;
+        }
+
+        /* --- ÁRBOL DE CUALIDADES --- */
+        .tree-section {
+            padding: 40px 20px;
+            background-color: #fffdf5;
+        }
+
+        .tree-container {
+            position: relative;
+            width: 320px;
+            height: 350px;
+            margin: 0 auto;
+            transition: transform 0.3s;
+        }
+
+        .trunk {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 120px;
+            background-color: #8b5a2b;
+            border-radius: 8px;
+            z-index: 1;
+        }
+
+        .leaf {
+            position: absolute;
+            background-color: #4ade80;
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.1);
+        }
+        .leaf-1 { width: 180px; height: 180px; top: 10%; left: 50%; transform: translateX(-50%); }
+        .leaf-2 { width: 150px; height: 150px; top: 35%; left: 10%; background-color: #22c55e; }
+        .leaf-3 { width: 150px; height: 150px; top: 35%; right: 10%; background-color: #22c55e; }
+
+        .heart-fruit {
+            position: absolute;
+            font-size: 2.5em;
+            cursor: pointer;
+            z-index: 3;
+            animation: latido 1.5s infinite;
+            user-select: none;
+            transition: transform 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .heart-fruit:hover {
+            transform: scale(1.2) rotate(-5deg);
+        }
+
+        @keyframes latido {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .quality-display {
+            font-size: 1.2em;
+            color: #be185d;
+            margin-top: 25px;
+            font-weight: bold;
+            min-height: 40px;
+            transition: opacity 0.3s ease;
+            padding: 0 10px;
+        }
+
+        /* === SISTEMA SOLAR 3D === */
+        .universe-section {
+            background-color: #050505; 
+            color: #fff;
+            padding: 60px 0;
+            position: relative;
+            overflow: hidden;
+            min-height: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            perspective: 1500px; 
+            transition: min-height 0.3s;
+        }
+
+        .universe-section h2 {
+            color: #fbcfe8;
+            position: relative;
+            z-index: 10;
+            margin-bottom: 80px;
+            text-shadow: 0 0 15px #f472b6;
+        }
+
+        .universe-section::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px);
+            background-size: 550px 550px, 350px 350px;
+            background-position: 0 0, 40px 60px;
+            z-index: 1;
+            opacity: 0.5;
+            animation: starsTwinkle 5s infinite alternate;
+        }
+
+        .solar-system-3d {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            transform-style: preserve-3d;
+            transform: rotateX(75deg); 
+            z-index: 2;
+            transition: transform 0.3s;
+        }
+
+        .sun-3d {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 150px; height: 150px;
+            background: radial-gradient(circle, #ffeda6, #f59e0b, #c2410c);
+            border-radius: 50%;
+            box-shadow: 0 0 100px #ea580c, 0 0 200px #ffed4a, inset 0 0 30px rgba(255,255,255,0.8);
+            transform: translate(-50%, -50%) rotateX(-75deg); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-weight: 900;
+            font-size: 2.2em;
+            text-shadow: 0 0 15px rgba(0,0,0,0.8);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .orbit-3d {
+            position: absolute;
+            top: 50%; left: 50%;
+            border-radius: 50%;
+            transform-style: preserve-3d;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .o1 { width: 300px; height: 300px; animation: spinOrbit 14s linear infinite; border-color: rgba(255, 200, 200, 0.3); }
+        .o2 { width: 450px; height: 450px; animation: spinOrbit 22s linear infinite; box-shadow: inset 0 0 20px rgba(255,255,255,0.05); }
+        .o3 { width: 620px; height: 620px; animation: spinOrbit 35s linear infinite; border: 2px dashed rgba(255,255,255,0.15); }
+        .o4 { width: 800px; height: 800px; animation: spinOrbit 50s linear infinite; border-color: rgba(200, 200, 255, 0.2); }
+
+        @keyframes spinOrbit {
+            0% { transform: translate(-50%, -50%) rotateZ(0deg); }
+            100% { transform: translate(-50%, -50%) rotateZ(360deg); }
+        }
+
+        .planet-wrapper {
+            position: absolute;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes counterSpin {
+            0% { transform: translate(-50%, -50%) rotateZ(0deg) rotateX(-75deg); }
+            100% { transform: translate(-50%, -50%) rotateZ(-360deg) rotateX(-75deg); }
+        }
+
+        .pw-1 { top: 0; left: 50%; animation: counterSpin 14s linear infinite; }
+        .pw-2 { top: 50%; left: 100%; animation: counterSpin 22s linear infinite; }
+        .pw-2b { top: 50%; left: 0%; animation: counterSpin 22s linear infinite; } 
+        .pw-3 { top: 100%; left: 50%; animation: counterSpin 35s linear infinite; }
+        .pw-3b { top: 0%; left: 50%; animation: counterSpin 35s linear infinite; }
+        .pw-4 { top: 50%; left: 0%; animation: counterSpin 50s linear infinite; }
+        .pw-4b { top: 85%; left: 15%; animation: counterSpin 50s linear infinite; }
+
+        .planet-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #fff;
+            font-family: 'Georgia', serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            white-space: nowrap;
+            text-shadow: 0 0 10px #ff71ce, 0 0 20px #ff71ce;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .planet-content.rojo { text-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055; }
+        .planet-content.azul { text-shadow: 0 0 10px #00b3ff, 0 0 20px #00b3ff; }
+        
+        .planet-core {
+            width: 25px; height: 25px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 15px #fff;
+        }
+
+        .core-miguel { background: #60a5fa; box-shadow: 0 0 20px #60a5fa; }
+        .core-corazon { background: #f43f5e; box-shadow: 0 0 20px #f43f5e; width: 30px; height: 30px; }
+        .core-ojos { background: #fbbf24; box-shadow: 0 0 20px #fbbf24; }
+        .core-cuerpo { background: #c084fc; box-shadow: 0 0 20px #c084fc; }
+        .moon { font-size: 1.5rem; animation: float 2s infinite ease-in-out alternate; }
+
+        footer {
+            background-color: #fbcfe8;
+            padding: 20px;
+            color: #831843;
+            font-weight: bold;
+        }
+
+        /* =========================================
+           DISEÑO RESPONSIVO (MÓVILES Y TABLETS)
+           ========================================= */
+        @media (max-width: 900px) {
+            .solar-system-3d { transform: rotateX(75deg) scale(0.75); }
+            .universe-section { min-height: 650px; }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            .cake-container { font-size: 5em; margin: 10px 0; }
+            h2 { font-size: 1.8em; }
+            
+            .gifts-container { gap: 30px; }
+            
+            .solar-system-3d { transform: rotateX(75deg) scale(0.6); }
+            .universe-section { min-height: 550px; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 2.2em; }
+            .subtitle { font-size: 1em; }
+            header { padding: 30px 15px; }
+            
+            /* Ajuste de fotos en móviles pequeños */
+            .gallery img {
+                width: 150px;
+                height: 150px;
+            }
+
+            .gifts-container { gap: 20px; }
+            .box-container { transform: scale(0.9); }
+
+            /* Ajuste del árbol para celulares */
+            .tree-container { transform: scale(0.85); margin-top: -20px; }
+            .quality-display { font-size: 1.1em; }
+
+            /* Ajuste extremo del Universo para que no genere scroll */
+            .solar-system-3d {
+                transform: rotateX(75deg) scale(0.38); /* Escala masiva para encajar 800px en 360px */
+            }
+            .universe-section { 
+                min-height: 400px; 
+                padding: 40px 0;
+            }
+            
+            /* Agrandar textos para compensar la escala del Universo */
+            .sun-3d { font-size: 3.5em; } 
+            .planet-content { font-size: 1.8rem; } 
+            
+            .letter-content { padding: 25px; width: 85%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>¡Feliz Cumpleaños mi vida! 🎈</h1>
+        <div class="cake-container">🎂</div>
+        <p class="subtitle">Espero que este día sea tan especial como tú.</p>
+    </header>
+
+    <section class="gallery-section">
+        <h2>Nuestros Mejores Momentos 💖</h2>
+        <div class="gallery" id="photo-gallery"></div>
+    </section>
+
+    <section class="gifts-section">
+        <h2>Tus Sorpresas 🎁</h2>
+        <p class="subtitle">Haz clic en las cajitas para descubrir un mensaje</p>
+        
+        <div class="gifts-container">
+            <div class="box-container" onclick="openBox(this, '¡Feliz Cumpleaños! Quería hacer algo distinto para celebrar tu día. Eres una persona increíble y te mereces lo mejor de este mundo.')">
+                <div class="letter-icon">💌</div>
+                <div class="box-lid"></div>
+                <div class="box-body"></div>
+            </div>
+
+            <div class="box-container" onclick="openBox(this, 'Gracias por cada momento juntos, por las risas y por apoyarme siempre. Voy a cumplir tus deseos y darte todo lo que tengo para sacarte una sonrisa todos los días.')">
+                <div class="letter-icon">💌</div>
+                <div class="box-lid"></div>
+                <div class="box-body"></div>
+            </div>
+
+            <div class="box-container" onclick="openBox(this, 'Recuerda que estoy muy orgulloso de todo lo que estás logrando. ¡Sigue brillando como siempre lo haces! Te ayudaré en este proceso de la universidad y cumpliré todos tus antojos. Te amo muchísimo amor de mi vida.')">
+                <div class="letter-icon">💌</div>
+                <div class="box-lid"></div>
+                <div class="box-body"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="tree-section">
+        <h2>Lo que más amo de ti 🌳❤️</h2>
+        <p class="subtitle">Toca cada corazón para descubrirlo</p>
+
+        <div class="tree-container">
+            <div class="leaf leaf-1"></div>
+            <div class="leaf leaf-2"></div>
+            <div class="leaf leaf-3"></div>
+            <div class="trunk"></div>
+
+            <div class="heart-fruit" style="top: 20%; left: 45%;" onclick="showQuality('Eres muy inteligente 💖')">💖</div>
+            <div class="heart-fruit" style="top: 45%; left: 20%;" onclick="showQuality('Tienes el corazón más noble 💖')">💖</div>
+            <div class="heart-fruit" style="top: 55%; left: 65%;" onclick="showQuality('Tu sonrisa ilumina mis noches ✨')">💖</div>
+            <div class="heart-fruit" style="top: 65%; left: 35%;" onclick="showQuality('Eres muy valiente 💖')">💖</div>
+            <div class="heart-fruit" style="top: 40%; left: 80%;" onclick="showQuality('Me encantan tus abrazos 💖')">💖</div>
+            <div class="heart-fruit" style="top: 30%; left: 30%;" onclick="showQuality('Tus ojos me enamoran 😍')">💖</div>
+        </div>
+
+        <div class="quality-display" id="quality-text">...</div>
+    </section>
+
+    <section class="universe-section">
+        <h2>Mi Universo eres Tú ✨🌌</h2>
+
+        <div class="solar-system-3d">
+            <div class="sun-3d">Mi novia</div>
+
+            <div class="orbit-3d o1">
+                <div class="planet-wrapper pw-1">
+                    <div class="planet-content azul">
+                        Mis ojos 💖
+                        <div class="planet-core core-miguel"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="orbit-3d o2">
+                <div class="planet-wrapper pw-2">
+                    <div class="planet-content rojo">
+                        Mi corazón 💖
+                        <div class="planet-core core-corazon"></div>
+                    </div>
+                </div>
+                <div class="planet-wrapper pw-2b">
+                    <div class="planet-content">I Love You 💖</div>
+                </div>
+            </div>
+
+            <div class="orbit-3d o3">
+                <div class="planet-wrapper pw-3">
+                    <div class="planet-content">
+                        Mis ojos 💖
+                        <div class="planet-core core-ojos"></div>
+                    </div>
+                </div>
+                <div class="planet-wrapper pw-3b">
+                    <div class="planet-content rojo">Amor de mi vida ✨</div>
+                </div>
+            </div>
+
+            <div class="orbit-3d o4">
+                <div class="planet-wrapper pw-4">
+                    <div class="planet-content">
+                        Mi cuerpo y alma 💖
+                        <div class="planet-core core-cuerpo"></div>
+                    </div>
+                </div>
+                <div class="planet-wrapper pw-4b">
+                    <div class="planet-content">
+                        <span class="moon">💘</span>
+                        Eres mi todo
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Hecho con ❤️ para tu cumpleaños</p>
+    </footer>
+
+    <div class="modal-overlay" id="modal">
+        <div class="letter-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <p id="modal-text"></p>
+            <p class="signature">Con amor,<br> - tu noviecito</p>
+        </div>
+    </div>
+
+    <script>
+        // === CARGA DE FOTOS ===
+        const cantidadDeFotos = 6; 
+        const extension = '.jpeg'; 
+        const gallery = document.getElementById('photo-gallery');
+
+        for (let i = 1; i <= cantidadDeFotos; i++) {
+            const numeroFormateado = i.toString().padStart(2, '0');
+            const nombreArchivo = `HB${numeroFormateado}${extension}`;
+            const imgElement = document.createElement('img');
+            imgElement.src = nombreArchivo;
+            imgElement.alt = `Recuerdo HB${numeroFormateado}`;
+
+            imgElement.onerror = function() {
+                this.style.display = 'none';
+            };
+            gallery.appendChild(imgElement);
+        }
+
+        // === LÓGICA GENERAL ===
+        const modal = document.getElementById('modal');
+        const modalText = document.getElementById('modal-text');
+
+        function openBox(elementoCaja, mensaje) {
+            elementoCaja.classList.add('open');
+            setTimeout(() => {
+                modalText.innerText = mensaje; 
+                modal.classList.add('show');   
+            }, 800);
+        }
+
+        function closeModal() {
+            modal.classList.remove('show');
+        }
+
+        const qualityText = document.getElementById('quality-text');
+        
+        function showQuality(mensaje) {
+            qualityText.style.opacity = '0';
+            setTimeout(() => {
+                qualityText.innerText = mensaje;
+                qualityText.style.opacity = '1';
+            }, 300); 
+        }
+    </script>
+</body>
+</html>
